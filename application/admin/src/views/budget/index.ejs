@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Painel de Administração - Índice</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
+  <script src="//cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+</head>
+
+<body>
+  <%- include('../partial/navbar') %>
+    <div class="container">
+      <h1 class="mt-4">Bem-vindo ao Painel de Administração</h1>
+      <!-- <a href="/composition/create" class="btn btn-success">Criar</a> -->
+      <table class="table mt-4">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Banco</th>
+            <th>Descrição</th>
+            <th>Unidade</th>
+            <th>Condição de preço</th>
+            <th>Ultima atualização</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% budgets.forEach(function(budget) { %>
+            <tr>
+              <td>
+                <%= budget.name %>
+              </td>
+              <td>
+                <%= budget.workName %>
+              </td>
+              <td>
+                <%= budget.description %>
+              </td>
+              <td>
+                <%= budget.bdi %>
+              </td>
+              <td>
+                <%= [ ...budget.compositions.map((c)=>c.childPrices),
+                  ...budget.supplies].flat().reduce((acc,curr)=> acc += (+(curr.price) * +(curr.quantity)),0).toFixed(2)
+                  %>
+              </td>
+              <td>
+                <%= budget.lastUpdate ? "01/" +budget.lastUpdate : "NDA" %>
+              </td>
+              <td>
+                <a href="/budget/<%= budget._id %>/visualize" class="btn btn-primary">Visualizar</a>
+                <!-- <button onclick="deleteBudget('/budget/<%= budget._id %>/delete')"
+                  class="btn btn-danger">Excluir</a> -->
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <script src="/js/notifier.js"></script>
+    <script>
+      new DataTable('table');
+      function deleteBudget(path) {
+        fetch(path)
+          .then(async (response) => {
+            const { message } = await response.json();
+            if (response.status == 200) {
+              Notifier.Success(message).showToast();
+              setTimeout(() => {
+                window.location.href = '/composition';
+              }, 3000);
+            } else {
+              Notifier.Error(message).showToast();
+            }
+          });
+      }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body>
+  <%- include('../partial/navbar') %>
+  <div class="container">
+    <a href="/enterprise" class="btn btn-secondary">Voltar</a>
+    <h1>Editando dados da empresa</h1>
+
+    <form>
+      <div class="form-group">
+        <label for="id">Id</label>
+        <input type="text" disabled class="form-control" id="id" value="<%= enterprise.id %>">
+      </div>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="<%= enterprise.name %>">
+      </div>
+
+      <div class="form-group">
+        <label for="document">Documento</label>
+        <input type="text" class="form-control" id="document" placeholder="<%= enterprise.document %>">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+  <script src="/js/notifier.js"></script>
+  <script>
+    document.querySelector('form').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const data = {}
+      const id = document.querySelector('#id').value;
+      data['name'] = document.querySelector('#name').value;
+      data['document'] = document.querySelector('#document').value;
+
+      fetch(`/enterprise/${id}/edit`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(response => {
+          if (response.status == 200) {
+            Notifier.Success('Edição realizada com sucesso').showToast();
+            setTimeout(() => {
+              window.location.href = '/enterprise';
+            }, 3000);
+          } else {
+            Notifier.Error('Erro ao editar').showToast();
+          }
+        })
+    });
+  </script>
+</body>
+
+</html>

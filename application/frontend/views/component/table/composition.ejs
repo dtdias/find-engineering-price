@@ -1,0 +1,57 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+<!-- <script async src="https://code.jquery.com/jquery-3.7.1.js"></script> -->
+<!-- <script async src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script> -->
+
+<table id="compositionsTable" class="table table-hover table-striped table-bordered table-sm"
+  style="font-size:smaller;word-wrap:break-word;width:100%">
+  <thead style="background-color:#2d98da;color:white;">
+    <tr>
+      <th>Código</th>
+      <th>Banco</th>
+      <th>Description</th>
+      <th>Unidade</th>
+      <th>Caderno Técnico</th>
+      <th>Atualizado em</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%compositions.forEach(function(composition){%>
+      <tr>
+        <td>
+          <%= composition.code %>
+        </td>
+        <td>
+          <%= composition.database %>
+        </td>
+        <td>
+          <%= composition.description %>
+        </td>
+        <td>
+          <%= composition.unit %>
+        </td>
+        <td>
+          <%= composition.technicalNotebook %>
+        </td>
+        <td>
+          <%= composition.lastUpdate %>
+        </td>
+        <td class="text-center">
+          <button class="btn btn-success changeResult" hx-trigger="click" hx-swap="innerHTML" hx-target="#results"
+            hx-get="<%=`/component/table/${id}/compositions/add?itemCode=${composition.code}&enterpriseDocument=${enterpriseDocument}&enterpriseName=${enterpriseName}`%>">+</button>
+        </td>
+      </tr>
+      <%})%>
+  </tbody>
+</table>
+
+<script>
+  (() => {
+    new DataTable('#compositionsTable', {
+      searching: false,
+      lengthChange: false
+    });
+  })();
+</script>

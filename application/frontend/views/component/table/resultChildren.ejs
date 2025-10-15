@@ -1,0 +1,30 @@
+<% composition.composition.children.forEach((compositionItem, index)=> {
+    const childItem = index+1;
+    const currentChildren = (
+    composition.metadata.childPrices.find(({id})=> id == compositionItem._id) || compositionItem
+    );
+    %>
+    <tr data-budget="<%= budgetId %>" data-type="composition" data-composition="<%= composition.composition._id  %>"
+        data-children="<%= compositionItem._id %>">
+        <td class="align-middle text-secondary">
+            <%= `${item}.${childItem}` %>
+        </td>
+        <td class="col-4 align-middle text-secondary">
+            <%= compositionItem.description %>
+        </td>
+        <td class="align-middle text-secondary">
+            <%= compositionItem.unit %>
+        </td>
+        <td class="align-middle text-secondary text-center">
+            <%= compositionItem.type %>
+        </td>
+        <td class="align-middle text-secondary">
+            <input type="number" class="w-25 form-control" id="quantity_<%= compositionItem._id %>" name="quantity"
+                <%=currentChildren.quantity ? `value=${currentChildren.quantity || 0}` : "" %> >
+        </td>
+        <td class="align-middle text-secondary" name="price" value="<%= currentChildren.price %>">
+            <%= Number(String(currentChildren.price).replace(',','.')).toFixed(5) %>
+        </td>
+        <td class="align-middle text-secondary"></td>
+    </tr>
+    <% }) %>

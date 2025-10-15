@@ -1,0 +1,45 @@
+{
+  "name": "pormil",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "maintainers": [
+    "Daniel Trajano<>",
+    "Everton Trajano<evertontrajano.ti@gmail.com>"
+  ],
+  "scripts": {
+    "start": "node ./index.js",
+    "start:frontend": "node ./frontend --start",
+    "start:backend": "node ./backend --start",
+    "start:admin": "node ./admin --start",
+    "dev": "npx nodemon ./index.js",
+    "dev:admin": "npx nodemon --delay 500ms ./admin --start",
+    "dev:admin:debug": "npx nodemon --delay 500ms --inspect ./admin --start",
+    "dev:backend": "npx nodemon --delay 500ms ./backend/index.js --start",
+    "dev:backend:debug": "npx nodemon --delay 500ms --inspect ./backend/index.js --start",
+    "dev:frontend": "npx nodemon --delay 500ms ./frontend/index.js --start",
+    "dev:frontend:debug": "npx nodemon --delay 500ms --inspect ./frontend/index.js --start",
+    "seed-supplies": "node ./model/_seed/supplies.js",
+    "seed-compositions": "node ./model/_seed/compositions.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "model",
+    "admin"
+  ],
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "mongoose": "^8.3.1",
+    "pino": "^8.18.0",
+    "pino-http": "^9.0.0",
+    "sequelize": "^6.37.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

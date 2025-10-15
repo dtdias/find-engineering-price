@@ -1,0 +1,53 @@
+<% if (!onlyView) { %>
+  <form id="editUserForm" name="editUser" hx-trigger="submit" hx-put="<%= env.API_URL %>/users/<%= user.id %>" hx-swap="none">
+    <h1>Detalhes do Usuário</h1>
+    <div class="form-group">
+      <label for="name">Nome</label>
+      <input required autocomplete="false" type="text" id="name" name="name" value="<%= user.name %>"
+        class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input required autocomplete="false" type="text" id="email" name="email" value="<%= user.email %>"
+        class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="document">Documento</label>
+      <input required autocomplete="false" type="text" id="document" name="document" value="<%= user.document %>"
+        class="form-control" required>
+    </div>
+    <div class="d-flex align-items-center justify-content-between">
+      <button type="submit" class="btn btn-primary btn-block mt-3">Confirmar</button>
+    </div>
+  </form>
+  <div hx-get="/component/user-form?onlyView=true" hx-swap="outerHTML" hx-target="#editUserForm"
+    hx-trigger="htmx:afterRequest from:#editUserForm">
+  </div>
+  <% } else { %>
+    <div hx-get="/component/user-form" hx-swap="outerHTML">
+      <h1>Detalhes da Empresa</h1>
+      <div class="form-group">
+        <label for="name">Nome</label>
+        <input required autocomplete="false" disabled type="text" id="name" name="name" value="<%= user.name %>"
+          class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input required autocomplete="false" disabled type="text" id="email" name="email" value="<%= user.email %>"
+          class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="document">Documento</label>
+        <input required autocomplete="false" disabled type="text" id="document" name="document"
+          value="<%= user.document %>" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="role">Cargo</label>
+        <input required autocomplete="false" disabled type="text" id="role" name="role" value="<%= role.name %>"
+          class="form-control" required>
+      </div>
+      <div class="d-flex align-items-center justify-content-between">
+        <button type="submit" class="btn btn-primary btn-block mt-3">Editar</button>
+      </div>
+    </div>
+  <% } %>

@@ -1,0 +1,31 @@
+<script defer src="/static/js/signin.js"></script>
+
+<div class="container">
+  <h1 class="mt-5 text-center">Por Mil</h1>
+  <div class="row justify-content-center">
+    <div class="mt-5 col-md-6">
+      <div class="mt-5 card">
+        <div class="card-body">
+          <h2 class="card-title text-center">Entrar</h2>
+          <form name="signin" onsubmit="onSignIn">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input autocomplete="false" type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Senha</label>
+              <input autocomplete="false" type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <button type="submit" class="btn btn-primary btn-block mt-3">Entrar</button>
+              <div class="p-2">
+                <a href="/cadastro" class="text-gray-500 text-sm">Não possuí uma conta?</a> <br>
+                <a href="/esqueci-minha-senha" class="text-gray-500 text-sm">Esqueci minha senha</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<table id="budgetTable" class="table border mt-5">
+
+    <head>
+        <tr>
+            <th>Registro</th>
+            <th>Orçamento</th>
+            <th>Nome da Obra</th>
+            <th>BDI</th>
+            <th></th>
+        </tr>
+    </head>
+
+    <body>
+        <% if (budgets.length> 0 ) { %>
+            <%budgets.forEach(function(budget){%>
+                <tr id="<%= `budget_${budget._id}` %>">
+                    <td>
+                        <%= budget._id %>
+                    </td>
+                    <td>
+                        <%= budget.name %>
+                    </td>
+                    <td>
+                        <%= budget.workName || "" %>
+                    </td>
+                    <td>
+                        <%= budget.bdi %>
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-info changeResult" href="/budget?id=<%= budget._id %>">Editar</a>
+                        <button class="btn btn-danger changeResult" hx-target="<%= `#budget_${budget._id}` %>"
+                            hx-delete="<%=`${env.API_URL}/budget/${budget._id}`%>" hx-trigger="click"
+                            hx-swap="delete">Delete</button>
+                    </td>
+                </tr>
+                <%})%>
+                    <% } else { %>
+                        <td colspan="5">
+                            Por favor crie orçamentos para exibir
+                        </td>
+                        <% } %>
+    </body>
+</table>
+<% if (budgets.length> 0 && false) { %>
+    <script>
+        (() => {
+            new DataTable('#budgetTable', {
+                searching: false,
+                lengthChange: false
+            });
+        })();
+    </script>
+    <% } %>

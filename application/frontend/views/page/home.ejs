@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<div class="container-fluid d-flex justify-content-between align-items-start bg-dark text-light p-5">
+  <div class="gap-1">
+    <img src="/static/pormil2.png" style="filter: saturate();" width="40" alt="">
+    <h3 class="text-nowrap  text-capitalize font-bold">Por Mil </h3>
+  </div>
+  <div class="text-right" hx-get="/component/user" hx-trigger="load delay:400ms" hx-swap="innerHTML">
+  </div>
+</div>
+<%- include('../partial/nav') %>
+  <div class="container-fluid px-5 py-3 mt-5">
+    <div class="w-auto d-flex flex-wrap p-2 position-relative gap-3">
+      <a href="/budget">Criar Orçamento</a>
+    </div>
+    <div hx-get="/component/budgets?enterpriseId=<%= enterprise.id %>" hx-trigger="load delay:400ms" hx-swap="innerHTML"></div>
+  </div>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insumo</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body>
+  <%- include('../partial/navbar') %>
+    <div class="container">
+      <a href="/supply" class="btn btn-secondary">Voltar</a>
+      <h1>Editando dados do insumo</h1>
+
+      <form>
+        <div class="form-group">
+          <label for="id">Id</label>
+          <input type="text" disabled class="form-control" value="<%= supply._id %>">
+          <input type="hidden" class="form-control" name="id" value="<%= supply._id %>" id="id">
+        </div>
+
+        <div class="form-group">
+          <label for="code">Código</label>
+          <input type="text" class="form-control" id="code" placeholder="<%= supply.code %>"
+            placeholder="Insira um código">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descrição</label>
+          <input type="text" class="form-control" id="description" placeholder="<%= supply.description %>"
+            placeholder="Insira uma descrição">
+        </div>
+
+        <div class="form-group">
+          <label for="unit">Unidade</label>
+          <input type="text" class="form-control" id="unit" placeholder="<%= supply.unit %>"
+            placeholder="Insira a unidade">
+        </div>
+
+        <div class="form-group">
+          <label for="category">Categoria</label>
+          <input type="text" id="category" placeholder="<%= supply.category %>" class="form-control"
+            placeholder="Selecione uma categoria">
+        </div>
+
+        <div class="form-group">
+          <label for="priceContition">Condição de preço</label>
+          <input type="text" id="priceContition" placeholder="<%= supply.priceContition %>" class="form-control"
+            placeholder="Selecione uma condição de preço">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+    </div>
+    <script src="/js/notifier.js"></script>
+    <script>
+      document.querySelector('form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const data = {};
+        const id = document.querySelector('#id').value;
+        data.code = document.querySelector('#code').value;
+        data.database = "PORMIL";
+        data.description = document.querySelector('#description').value;
+        data.unit = document.querySelector('#unit').value;
+        data.category = document.querySelector('#category').value;
+        data.priceContition = document.querySelector('#priceContition').value;
+
+        fetch(`/supply/${id}/edit`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(async (response) => {
+            const { message } = await response.json();
+            if (response.status == 200) {
+              Notifier.Success(message).showToast();
+              setTimeout(() => {
+                window.location.href = '/supply';
+              }, 3000);
+            } else {
+              Notifier.Error(message).showToast();
+            }
+          })
+      });
+    </script>
+</body>
+
+</html>

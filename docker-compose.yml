@@ -1,0 +1,90 @@
+version: '3.7'
+services:
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: "ProxyReverso"
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - internal
+      - datalayer
+    depends_on:
+      - frontend
+      - backend
+      - database 
+  frontend:
+    container_name: "Aplicacao-Frontend"
+    image: evertonp9/perthounsand:latest
+    command: /bin/sh -c "npm run start:frontend"
+    env_file:
+      - .env
+    networks:
+      - internal
+      - datalayer
+    volumes:
+      - ./application:/srv
+      - ./npm_logs:/root/.npm/_logs
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 50M
+  admin:
+    container_name: "Painel-Admin"
+    image: evertonp9/perthounsand:latest
+    command: /bin/sh -c "npm run start:admin"
+    env_file:
+      - .env
+    networks:
+      - internal
+      - datalayer
+    volumes:
+      - ./application:/srv
+      - ./npm_logs:/root/.npm/_logs
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 50M
+  backend:
+    container_name: "Aplicacao-Backend"
+    image: evertonp9/perthounsand:latest
+    command: /bin/sh -c "npm run start:backend"
+    env_file:
+      - .env
+    networks:
+      - internal
+      - datalayer
+    volumes:
+      - ./application:/srv
+      - ./npm_logs:/root/.npm/_logs
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 50M
+  database:
+    container_name: "Banco"
+    image: postgres:16.2-alpine
+    env_file:
+      - .env
+    environment:
+      - LANG=pt_BR.utf8
+    volumes:
+      - ./database/instance:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - datalayer
+networks:
+  internal:
+  datalayer:
+
+volumes:
+  default:
+

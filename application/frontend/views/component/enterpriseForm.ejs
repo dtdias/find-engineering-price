@@ -1,0 +1,40 @@
+<% if (!onlyView) { %>
+  <form id="editEnterpriseForm" name="editEnterprise" hx-trigger="submit" hx-put="<%= env.API_URL %>/enterprises/<%= enterprise.id %>"
+     hx-swap="none">
+    <h1>Detalhes da Empresa</h1>
+    <div class="form-group">
+      <label for="name">Nome</label>
+      <input required autocomplete="false" type="text" id="name" name="name" value="<%= enterprise.name %>"
+        class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="document">Documento</label>
+      <input required autocomplete="false" type="text" id="document" name="document" value="<%= enterprise.document %>"
+        class="form-control" required>
+    </div>
+    <div class="d-flex align-items-center justify-content-between">
+      <button type="submit" class="btn btn-primary btn-block mt-3">Confirmar</button>
+    </div>
+  </form>
+  <div hx-get="/component/enterprise-form?onlyView=true" hx-swap="outerHTML" hx-target="#editEnterpriseForm" hx-trigger="htmx:afterRequest from:#editEnterpriseForm">
+  </div>
+<% } else { %>
+    <div hx-get="/component/enterprise-form" hx-swap="outerHTML">
+      <h1>Detalhes da Empresa</h1>
+      <div class="form-group">
+        <label for="name">Nome</label>
+        <h5 id="name">
+          <%= enterprise.name %>
+        </h5>
+      </div>
+      <div class="form-group">
+        <label for="document">Documento</label>
+        <h5 id="document">
+          <%= enterprise.document %>
+        </h5>
+      </div>
+      <div class="d-flex align-items-center justify-content-between">
+        <button type="submit" class="btn btn-primary btn-block mt-3">Editar</button>
+      </div>
+    </div>
+<% } %>

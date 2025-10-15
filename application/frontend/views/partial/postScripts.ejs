@@ -1,0 +1,29 @@
+<script defer>
+  // window.onscroll = function () { scrollFunction() };
+  // function scrollFunction() {
+  //   const shouldBeBlock = document.body.scrollTop > 20 || document.documentElement.scrollTop > 20
+  //   mybutton.style.display = shouldBeBlock ? "block" : "none";
+  // }
+  // function topFunction() {
+  //   document.body.scrollTop = 0; // For Safari
+  //   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  // } 
+
+
+  htmx.on("htmx:configRequest", (e)=> {
+    e.detail.headers["Authorization"] = localStorage.getItem('__token');
+  })
+</script>
+
+<% if (backendMessage) { %>
+  <script async defer>
+    Toastify({
+      text: '<%= backendMessage %>',
+      duration: 3000,
+      close: true,
+      gravity: 'top',
+      position: 'right',
+      backgroundColor: '#00b09b',
+    }).showToast();
+  </script>
+<% } %>

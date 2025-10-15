@@ -1,0 +1,145 @@
+<form id="budgetItemsForm" class="gap-5">
+  <div class="d-flex gap-3">
+
+    <button id="budgetItemsFormButton" disabled class="btn btn-success" type="submit">Salvar valores</button>
+    <a class="btn btn-success"
+      href="/generate-csv?budget=<%= budget._id %>&enterpriseDocument=<%= enterpriseDocument %>&enterpriseName=<%= enterpriseName %>"
+      disabled download="planilha-teste.csv">Gerar CSV</a>
+  </div>
+  <% if (budget.supplies.length) { %>
+    <h1>Insumos</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Descrição</th>
+          <th>Unidade</th>
+          <th class="text-center">Condição de Custo</th>
+          <th>Quantidade</th>
+          <th>Preço(R$)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="supplyBody">
+        <% budget.supplies.forEach(function(supply, index) { %>
+          <tr data-budget="<%= budget._id %>" data-type="supply" data-supply="<%= supply._id  %>">
+            <td class="align-middle">
+              <%= index + 1 %>
+            </td>
+            <td class="col-4 align-middle">
+              <%= supply.source.description %>
+            </td>
+            <td class="align-middle">
+              <%= supply.source.unit %>
+            </td>
+            <td class="align-middle text-center w-25">
+              <%= supply.source.costCondition %>
+            </td>
+            <td class="align-middle w-25">
+              <input type="number" class="w-25 form-control" id="quantity_<%= supply.source._id %>" name="quantity"
+                <%=supply.quantity ? `value=${supply.quantity || 0}` : "" %>>
+            </td>
+            <td class="align-middle w-25" data-price="<%= supply.source.code %>" hx-trigger="load"
+              hx-get="<%=`/component/table/supplyPrice?id=${supply.source._id}&currentPrice=${supply.price}`%>"
+              hx-swap="innerHTML"></td>
+            <td class="align-middle">
+              <button tabindex="-1" class="btn btn-danger font-bold rounded-circle py-0 px-3 fs-2 changeResult"
+                hx-trigger="click" hx-swap="innerHTML" hx-target="#results"
+                hx-get="<%=`/component/table/${budget._id}/supplies/remove?itemCode=${supply.source.code}&enterpriseDocument=${enterpriseDocument}&enterpriseName=${enterpriseName}`%>">-</button>
+            </td>
+          </tr>
+          <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+
+      <% if (budget.compositions.length) { %>
+        <h1>Composições</h1>
+        <table class=" table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Descrição</th>
+              <th>Unidade</th>
+              <th class="text-center">Condição de Custo/Tipo</th>
+              <th>Quantidade</th>
+              <th>Preço(R$)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="compositionBody">
+            <% budget.compositions.forEach(function(composition, index) { let item=index+1; %>
+              <tr id="composition_<%= composition._id %>" class="">
+                <td class="align-middle">
+                  <%= item %>
+                </td>
+                <td class="col-4 align-middle ">
+                  <%= composition.source.description %>
+                </td>
+                <td class="align-middle ">
+                  <%= composition.source.unit %>
+                </td>
+                <td class="align-middle text-center">
+                  <%= composition.source.costCondition %>
+                </td>
+                <td></td>
+                <td class="align-middle" hx-get="/component/table/resultChildren?<%= 
+                  `id=${composition.source._id}&item=${item}&budgetId=${budget._id}`
+                  %>" hx-target="<%= " #composition_"+composition._id %>" hx-swap="afterend" hx-trigger="load"></td>
+                <td class="align-middle">
+                  <button tabindex="-1" class="btn btn-danger font-bold rounded-circle py-0 px-3 fs-2 changeResult"
+                    hx-trigger="click" hx-swap="innerHTML" hx-target="#results"
+                    hx-get="/component/table/<%= budget._id %>/compositions/remove?itemCode=<%= composition.source.code %>">-</button>
+                </td>
+              </tr>
+              <% }); %>
+          </tbody>
+        </table>
+        <% } %>
+</form>
+
+<script>
+  window.budgetItemsForm = document.querySelector('#budgetItemsForm');
+  budgetItemsForm.addEventListener('change', () => {
+    budgetItemsForm.querySelector('#budgetItemsFormButton').removeAttribute('disabled');
+  })
+  budgetItemsForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    budgetData = {}
+    for (let budgetItem of document.querySelectorAll('[data-budget="<%= budget._id %>"][data-type="composition"]')) {
+      const { budget, composition, children } = budgetItem.dataset
+      if (!budgetData.id) budgetData.id = budget
+      if (!budgetData.composition) budgetData.composition = {}
+      if (!budgetData.composition[composition]) budgetData.composition[composition] = {}
+
+      budgetData.composition[composition] = {
+        [children]: {
+          price: budgetItem.querySelector(`tr[data-composition="${composition}"] [name="price"]`)?.getAttribute('value')?.replace(',', '.'),
+          quantity: Math.abs(budgetItem.querySelector(`tr[data-composition="${composition}"] [name="quantity"]`).value || 0)
+        },
+        ...budgetData.composition[composition]
+      }
+    }
+    for (let budgetItem of document.querySelectorAll('[data-budget="<%= budget._id %>"][data-type="supply"]')) {
+      const { budget, supply, children } = budgetItem.dataset
+      if (!budgetData.id) budgetData.id = budget
+      if (!budgetData.supply) budgetData.supply = {}
+      if (!budgetData.supply[supply]) budgetData.supply[supply] = {}
+
+      let price = budgetItem.querySelector(`tr[data-supply="${supply}"] [name="price"]`)?.getAttribute('val ue')?.replace(',', '.');
+      if (!price) price = budgetItem.querySelector(`tr[data-supply="${supply}"] [name="price"]`).value || 0;
+      budgetData.supply[supply] = {
+        price,
+        quantity: Math.abs(budgetItem.querySelector(`tr[data-supply="${supply}"] [name="quantity"]`).value || 0)
+      }
+    }
+    try {
+      const data = await CustomFetch.request('PUT', `${env.API_URL}/budget/${budgetData.id}/update/all/0`, budgetData)
+      Notifier.Success("Atualizado com sucesso.").showToast();
+      budgetItemsForm.querySelector('#budgetItemsFormButton').setAttribute('disabled', true);
+    } catch (error) {
+      Notifier.Error("Falha ao salvar").showToast();
+    }
+
+  }, false)
+</script>

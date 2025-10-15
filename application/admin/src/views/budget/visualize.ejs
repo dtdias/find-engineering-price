@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orçamento</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body>
+  <%- include('../partial/navbar') %>
+    <div class="container">
+      <a href="/budget" class="btn btn-secondary">Voltar</a>
+      <h1>Dados do orçamento</h1>
+
+      <form>
+        <div class="form-group">
+          <label for="id">Id</label>
+          <input readonly type="text" disabled class="form-control" value="<%= budget._id %>">
+          <input readonly type="hidden" class="form-control" name="id" value="<%= budget._id %>" id="id">
+        </div>
+
+        <div class="form-group">
+          <label for="name">Nome do orçamento</label>
+          <input readonly type="text" class="form-control" id="name" value="<%= budget.name %>">
+        </div>
+
+        <div class="form-group">
+          <label for="workName">Nome da Obra</label>
+          <input readonly type="text" class="form-control" id="workName" value="<%= budget.workName %>">
+        </div>
+
+        <div class="form-group">
+          <label for="bdi">BDI</label>
+          <input readonly type="text" class="form-control" id="bdi" value="<%= budget.bdi %>%">
+        </div>
+        <div id="box">
+          <% budget.supplies.forEach(supply=> { %>
+            <div class="form-group p-5" style="gap: 8px;background-color: #DDD6;">
+              <div class="form-group d-flex" style="gap: 8px">
+                <div class="form-group w-100">
+                  <input readonly type="hidden" id="_id" name="_id" value="<%= supply.source._id %>">
+                  <label for="code">Código</label>
+                  <input readonly type="text" class="form-control" id="code" value="<%= supply.source.code %>">
+                </div>
+
+                <div class="form-group w-100">
+                  <label for="description">Descrição</label>
+                  <input readonly type="text" class="form-control" id="description"
+                    value="<%= supply.source.description %>">
+                </div>
+              </div>
+              <div class="form-group d-flex" style="gap: 8px">
+                <div class="form-group w-25">
+                  <label for="type">Tipo</label>
+                  <input readonly type="text" class="form-control" id="type" value="INSUMO">
+                </div>
+                <div class="form-group w-25">
+                  <label for="unit">Unidade</label>
+                  <input readonly type="text" class="form-control" id="unit" value="<%= supply.source.unit %>">
+                </div>
+                <div class="form-group w-25">
+                  <label for="price">Preço</label>
+                  <input readonly type="text" class="form-control" id="price" value="<%= supply.price %>">
+                </div>
+                <div class="form-group w-25">
+                  <label for="quantity">Pendencia</label>
+                  <input readonly type="text" class="form-control" id="quantity" value="<%= supply.quantity %>">
+                </div>
+              </div>
+            </div>
+            <% }) %>
+              <% budget.compositions.forEach(composition=> { %>
+                <div class="form-group p-5" style="gap: 8px;background-color: #DDD6;">
+                  <div class="form-group d-flex" style="gap: 8px">
+                    <div class="form-group w-100">
+                      <input readonly type="hidden" id="_id" name="_id" value="<%= composition.source._id %>">
+                      <label for="code">Código</label>
+                      <input readonly type="text" class="form-control" id="code" value="<%= composition.source.code %>">
+                    </div>
+
+                    <div class="form-group w-100">
+                      <label for="description">Descrição</label>
+                      <input readonly type="text" class="form-control" id="description"
+                        value="<%= composition.source.description %>">
+                    </div>
+                  </div>
+                  <div class="form-group d-flex" style="gap: 8px">
+                    <div class="form-group w-50">
+                      <label for="type">Tipo</label>
+                      <input readonly type="text" class="form-control" id="type" value="COMPOSIÇÂO">
+                    </div>
+                    <div class="form-group w-50">
+                      <label for="unit">Unidade</label>
+                      <input readonly type="text" class="form-control" id="unit" value="<%= composition.source.unit %>">
+                    </div>
+                  </div>
+                  <div>
+                    <% composition.source.children.forEach(compositionItem=> { %>
+                      <div class="form-group p-5" style="background-color: white;gap: 8px;">
+                        <div class="form-group d-flex" style="gap: 8px">
+                          <div class="form-group w-100">
+                            <label for="description">Descrição</label>
+                            <input type="text" class="form-control" id="description"
+                              value="<%= compositionItem.description %>">
+                          </div>
+                        </div>
+                        <div class="form-group d-flex" style="gap: 8px">
+                          <div class="form-group">
+                            <input type="hidden" id="_id" name="_id" value="<%= compositionItem._id %>">
+                            <label for="code">Código</label>
+                            <input type="text" class="form-control" id="code" value="<%= compositionItem.code %>">
+                          </div>
+
+                          <div class="form-group">
+                            <label for="type">type</label>
+                            <input type="text" class="form-control" id="type" value="<%= compositionItem.type %>">
+                          </div>
+
+                          <div class="form-group">
+                            <label for="unit">Unidade</label>
+                            <input type="text" class="form-control" id="unit" value="<%= compositionItem.unit %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="price">Preço</label>
+                            <input type="text" class="form-control" id="price" value="<%= compositionItem.price %>">
+                          </div>
+                          <div class="form-group">
+                            <label for="pendencies">Pendencia</label>
+                            <input type="text" class="form-control" id="pendencies"
+                              value="<%= compositionItem.pendencies %>">
+                          </div>
+                        </div>
+                      </div>
+                      <% }) %>
+                  </div>
+                </div>
+                <% }) %>
+      </form>
+    </div>
+    <!-- <script src="/js/notifier.js"></script>
+    <script>
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        if (event.submitter.getAttribute('type') === 'menu') return
+        const data = {};
+        data._id = document.querySelector('#id').value;
+        data.code = document.querySelector('#code').value;
+        data.database = "PORMIL";
+        data.description = document.querySelector('#description').value;
+        data.unit = document.querySelector('#unit').value;
+        data.costCondition = document.querySelector('#costCondition').value;
+        data.children = []
+
+        for (let item of document.querySelectorAll('#box > div')) {
+          const temp = {};
+          for (let subItem of item.children) {
+            if (subItem.classList.contains('form-group')) {
+              temp[subItem.children[1].id] = subItem.children[1].value
+            }
+          }
+          data.children.push(temp)
+        }
+
+
+        fetch(`/budget/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(async (response) => {
+            const { message } = await response.json();
+            if (response.status == 200) {
+              Notifier.Success(message).showToast();
+              setTimeout(() => {
+                window.location.href = '/budget';
+              }, 3000);
+            } else {
+              Notifier.Error(message).showToast();
+            }
+          })
+      });
+
+      function addItem() {
+        const clone = document.querySelector("#compositionItemTemplate").content.cloneNode(true);
+        document.querySelector('#box').appendChild(clone);
+        document.querySelector('#box').querySelector('#_id').value = ObjectId()
+      }
+
+      function removeItem() {
+        event.target.parentElement.remove()
+      }
+    </script> -->
+</body>
+
+</html>

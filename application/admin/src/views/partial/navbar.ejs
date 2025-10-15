@@ -1,0 +1,31 @@
+<style>
+    .navbar {
+        display: grid;
+        grid-gap: 20px;
+        grid-template-columns: repeat(5, 200px);
+        grid-template-rows: 100px;
+        background-color: #DDD;
+        height: 100px;
+        align-content: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+</style>
+<aside class="navbar">
+    <a href="/user">Usuarios</a>
+    <a href="/enterprise">Empresas</a>
+    <a href="/budget">Orçamentos</a>
+    <a href="/supply">Insumos</a>
+    <a href="/composition">Composições</a>
+    <!-- <a href="/role-permission">Cargos e Permissões</a> -->
+</aside>
+<script>
+    function ObjectId() {
+        return hex(Date.now() / 1000) +
+            ' '.repeat(16).replace(/./g, () => hex(Math.random() * 16))
+    }
+
+    function hex(value) {
+        return Math.floor(value).toString(16)
+    }
+</script>

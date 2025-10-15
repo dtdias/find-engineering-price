@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <title>Painel de Administração - Índice</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
+  <script src="//cdn.datatables.net/2.0.7/js/dataTables.min.js"></script>
+</head>
+
+<body>
+  <%- include('../partial/navbar') %>
+    <div class="container">
+      <h1 class="mt-4">Bem-vindo ao Painel de Administração</h1>
+      <a href="/supply/create" class="btn btn-success">Criar</a>
+      <table class="table mt-4">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Banco</th>
+            <th>Descrição</th>
+            <th>Unidade</th>
+            <th>Condição de preço</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% supplies.forEach(function(supply) { %>
+            <tr>
+              <td>
+                <%= supply.code %>
+              </td>
+              <td>
+                <%= supply.database %>
+              </td>
+              <td>
+                <%= supply.description %>
+              </td>
+              <td>
+                <%= supply.unit %>
+              </td>
+              <td>
+                <%= supply.costCondition %>
+              </td>
+              <td>
+                <a href="/supply/<%= supply._id %>/edit" class="btn btn-primary">Editar</a>
+                <button onclick="deleteSupply('/supply/<%= supply._id %>/delete')"
+                  class="btn btn-danger">Excluir</a>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <script src="/js/notifier.js"></script>
+    <script>
+      new DataTable('table');
+      function deleteSupply(path) {
+        fetch(path)
+          .then(async (response) => {
+            const { message } = await response.json();
+            if (response.status == 200) {
+              Notifier.Success(message).showToast();
+              setTimeout(() => {
+                window.location.href = '/supply';
+              }, 3000);
+            } else {
+              Notifier.Error(message).showToast();
+            }
+          })
+      }
+    </script>
+</body>
+
+</html>

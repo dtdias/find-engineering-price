@@ -1,0 +1,48 @@
+<% if (!budget._id) { %>
+    <form id="send-budget"  hx-post="<%= env.API_URL %>/budget" hx-on::after-request="window.location.replace('/')">
+        <% } else { %>
+            <form id="send-budget"
+                hx-headers='{"enterpriseName": "<%= enterpriseName %>"}'
+                    hx-put="<%= env.API_URL %>/budget/<%= budget._id %>" >
+                <% } %>
+                    <fieldset class="w-auto d-flex flex-wrap p-2 position-relative gap-3">
+                        <div class="mb-3">
+                            <label for="inputId" class="form-label">Registro</label>
+                            <input type="text" disabled class="form-control" id="inputId" value="<%= budget._id  %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="enterpriseName" class="form-label">Empresa</label>
+                            <input type="hidden" class="form-control" id="enterpriseId" name="enterpriseId"
+                                value="<%= enterpriseId %>">
+                            <input type="text" class="form-control" id="enterpriseName" disabled name="enterpriseName"
+                                value="<%= enterpriseName %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputName" class="form-label">Nome do Orçamento</label>
+                            <input type="text" class="form-control" id="inputName" name="name"
+                                value="<%= budget.name %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputWorkname" class="form-label">Nome da Obra</label>
+                            <input type="text" class="form-control" id="inputWorkname" name="workName"
+                                value="<%= budget.workName %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="inputBdi" class="form-label">BDI</label>
+                            <input type="number" class="form-control" id="inputBdi" name="bdi"
+                                value="<%= budget.bdi %>">
+                        </div>
+
+                        <div class="mt-2 align-content-center">
+                            <button  <%= budget._id ? "disabled" : "" %> id="sendBudgetButton" class="btn btn-success">Enviar</button>
+                        </div>
+                    </fieldset>
+            </form>
+
+            <% if (budget._id) { %>
+                <script>
+                    document.querySelector('#send-budget').addEventListener('change', (e) => {
+                        document.querySelector('#sendBudgetButton').removeAttribute('disabled');
+                    })
+                </script>
+                <% } %>

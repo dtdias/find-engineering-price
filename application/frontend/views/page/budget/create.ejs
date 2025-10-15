@@ -1,0 +1,87 @@
+<div class="container-fluid d-flex justify-content-between align-items-start bg-dark text-light p-5">
+    <div class="gap-1">
+        <img src="/static/pormil2.png" style="filter: saturate();" width="40" alt="">
+        <h3 class="text-nowrap  text-capitalize font-bold">Por Mil </h3>
+    </div>
+    <div class="text-right" hx-get="/component/user" hx-trigger="load delay:400ms" hx-swap="innerHTML"
+        >
+    </div>
+</div>
+<div class="container-fluid px-5 py-3">
+    <a href="/?userId=<%= userId %>" class="btn btn-secondary mb-5">
+        <i class="bi-arrow-left"></i> Voltar
+    </a>
+    <div hx-get="/component/budget-form?enterpriseId=<%= enterprise.id %>&enterpriseName=<%= enterprise.name %>&id=<%= budget._id %>"
+        hx-trigger="load" hx-swap="outerHTML"></div>
+    <div class="w-auto d-flex flex-wrap p-2 position-relative gap-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#composition-search">
+            Adicionar composições
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#supply-search">
+            Adicionar insumos
+        </button>
+    </div>
+
+    <section id="results" hx-get="/component/table/result?id=<%= 
+    budget._id ? budget._id : ""  %>&enterpriseDocument=<%= 
+    enterprise.document %>&enterpriseName=<%= enterprise.name %>" hx-trigger="load" hx-swap="innerHTML"
+        class="w-auto d-flex flex-col flex-wrap p-2 position-relative gap-3">
+
+    </section>
+</div>
+
+<div class="modal fade" id="composition-search" tabindex="-1" aria-labelledby="composition-search-label"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="composition-search-label">
+                    Encontre uma Composição
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" type="search" name="search" placeholder="Pesquise..."
+                    hx-get="<%=`/component/table/composition?id=${budget._id}&enterpriseDocument=${enterprise.document}&enterpriseName=${enterprise.name}`%>"
+                    hx-trigger="input changed delay:400ms, search" hx-target="#composition-table-container"
+                    hx-swap="innerHTML" hx-indicator=".htmx-indicator">
+                <div id="composition-table-container" hx-swap="innerHTML">
+                    <div class="d-flex justify-content-center mt-5">
+                        Insira uma pesquisa acima.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="document.querySelectorAll('.modal').forEach(e=> e.scrollTop = 0)" type="button"
+                    class="btn btn-primary" title="Go to top">Voltar ao topo</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="supply-search" tabindex="-1" aria-labelledby="supply-search-label" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="supply-search-label">
+                    Encontre um Insumo
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" type="search" name="search" placeholder="Pesquise..."
+                    hx-get="<%=`/component/table/supply?id=${budget._id}&enterpriseDocument=${enterprise.document}&enterpriseName=${enterprise.name}`%>" hx-trigger="input changed delay:400ms,
+                    search" hx-target="#table-container" hx-swap="innerHTML" hx-indicator=".htmx-indicator">
+                <div id="table-container" hx-swap="innerHTML">
+                    <div class="d-flex justify-content-center mt-5">
+                        Insira uma pesquisa acima.
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button onclick="document.querySelectorAll('.modal').forEach(e=> e.scrollTop = 0)" type="button"
+                    class="btn btn-primary" title="Go to top">Voltar ao topo</button>
+            </div>
+        </div>
+    </div>
+</div>

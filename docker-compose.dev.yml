@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  application:
+    container_name: "Aplicacao"
+    image: evertonp9/perthounsand:latest
+    command: npm run dev
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+      - 3001:3001
+    networks:
+      - internal
+      - datalayer
+    volumes:
+      - ./application:/srv
+      - ./npm_logs:/root/.npm/_logs
+    depends_on:
+      - database
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 50M
+      restart_policy:
+        condition: on-failure
+        
+  database:
+    container_name: "Banco"
+    image: postgres:16.2-alpine
+    env_file:
+      - .env
+    environment:
+      - LANG=pt_BR.utf8
+    volumes:
+      - ./database/instance:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - datalayer
+      - internal
+networks:
+  internal:
+   driver: local
+  datalayer:
+
+volumes:
+  default:

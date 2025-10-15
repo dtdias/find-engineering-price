@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empresas</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body>
+  <%- include('../partial/navbar') %>
+    <div class="container">
+      <a href="/enterprise" class="btn btn-secondary">Voltar</a>
+      <h1>Criando dados do empresas</h1>
+
+      <form>
+        <div class="form-group">
+          <label for="id">Id</label>
+          <input type="text" disabled class="form-control" value="<%= id %>">
+          <input type="hidden" class="form-control" name="id" value="<%= id %>" id="id">
+        </div>
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Insira o name">
+        </div>
+
+        <div class="form-group">
+          <label for="document">Documento</label>
+          <input type="text" class="form-control" id="document" placeholder="Insira o documento">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+    </div>
+    <script src="/js/notifier.js"></script>
+    <script>
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const id = document.querySelector('#id').value;
+        const name = document.querySelector('#name').value;
+        const document_ = document.querySelector('#document').value;
+
+        const data = {
+          id,
+          name: name,
+          document: document_,
+        };
+
+        fetch(`/enterprise/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(async (response) => {
+            const { message } = await response.json();
+            if (response.status == 200) {
+              Notifier.Success(message).showToast();
+              setTimeout(() => {
+                window.location.href = '/enterprise';
+              }, 3000);
+            } else {
+              Notifier.Error(message).showToast();
+            }
+          })
+      });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "model",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./mongo": "./mongo/index.js",
+    "./models": "./models/index.js",
+    "./queries/compositions": "./queries/compositions.js",
+    "./queries/supplies": "./queries/supplies.js"
+  },
+  "scripts": {
+    "sequelize": "npx sequelize-cli"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.11.3",
+    "sequelize": "^6.37.2"
+  }
+}
